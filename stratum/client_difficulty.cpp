@@ -38,12 +38,8 @@ void client_change_difficulty(YAAMP_CLIENT *client, double difficulty)
 //	debuglog("change diff to %f %f\n", difficulty, client->difficulty_actual);
 	if(difficulty == client->difficulty_actual) return;
 
-	uint64_t user_target = diff_to_target(difficulty);
-	if(user_target >= YAAMP_MINDIFF && user_target <= YAAMP_MAXDIFF)
-	{
-		client->difficulty_actual = difficulty;
-		client_send_difficulty(client, difficulty);
-	}
+	client->difficulty_actual = difficulty;
+	client_send_difficulty(client, difficulty);
 }
 
 void client_adjust_difficulty(YAAMP_CLIENT *client)
@@ -58,6 +54,12 @@ void client_adjust_difficulty(YAAMP_CLIENT *client)
 
 	else if(client->difficulty_fixed)
 		return;
+
+	else if(client->shares_per_minute > 75)
+		client_change_difficulty(client, client->difficulty_actual*3.5);
+
+	else if(client->shares_per_minute > 50)
+		client_change_difficulty(client, client->difficulty_actual*3);
 
 	else if(client->shares_per_minute > 25)
 		client_change_difficulty(client, client->difficulty_actual*2);
@@ -91,11 +93,8 @@ void client_initialize_difficulty(YAAMP_CLIENT *client)
 	uint64_t user_target = diff_to_target(diff);
 
 //	debuglog("%016llx target\n", user_target);
-	if(user_target >= YAAMP_MINDIFF && user_target <= YAAMP_MAXDIFF)
-	{
-		client->difficulty_actual = diff;
-		client->difficulty_fixed = true;
-	}
+	client->difficulty_actual = diff;
+	client->difficulty_fixed = true;
 
 }
 
