@@ -99,6 +99,8 @@ function yaamp_algo_mBTC_factor($algo)
 	case 'lbry':
 	case 'vanilla':
 		return 1000;
+	case 'gr':
+		return 0.001;
 	default:
 		return 1;
 	}
@@ -136,6 +138,7 @@ function yaamp_get_algo_norm($algo)
 		'yescryptR16'	=> 1.0,
 		'yescryptR32'	=> 1.0,
 		'zr5'		=> 1.0,
+		'gr'		=> 0.001,
 	);
 
 	if(!isset($a[$algo]))
